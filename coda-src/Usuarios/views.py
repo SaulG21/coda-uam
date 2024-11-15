@@ -173,7 +173,7 @@ class CreateAlumnoView(CodaViewMixin, CreateView):
 
     template_name = 'Usuarios/agregar_alumno.html'
     success_url = reverse_lazy('Tutores-Coda')
-    #model = Alumno
+    model = Alumno
     form_class = userForms.FormAlumno
 
     
@@ -181,7 +181,7 @@ class CreateAlumnoView(CodaViewMixin, CreateView):
 class CreateCordinadorView(CodaViewMixin, CreateView):
     template_name = 'Usuarios/agregar_cordinador.html'
     success_url = reverse_lazy('Tutores-Coda')
-    #model = Cordinador
+    model = Cordinador
     form_class = userForms.FormCordinador
 
     
@@ -189,11 +189,12 @@ class CreateCordinadorView(CodaViewMixin, CreateView):
 class CreateTutorView(CodaViewMixin, CreateView):
     template_name = 'Usuarios/agregar_tutor.html'
     success_url = reverse_lazy('Tutores-Coda')
-    #model = Tutor
+    model = Tutor
     form_class = userForms.FormTutor
 
 
-
+class SaludoView(TemplateView):
+    template_name = "Usuarios/saludo.html"
 
 
 # class AceptarTutoriaView(View):

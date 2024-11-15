@@ -18,6 +18,9 @@
                         <table class="table table-striped table-hover">
                           <thead>
                             <tr>
+                              <th>
+                                <input type="checkbox" id="select-all"/>
+                              </th>
                               <th>Nombre</th>
                               <th>Correo</th>
                               <th>Correo personal</th>
@@ -30,12 +33,14 @@
                             <tr>
                             {% for alumno in object_list %}
                             <tr>
+                              <td>
+                                <input type="checkbox" class="select-item"/>
+                              </td>
                               <td>{{ alumno.first_name }} {{ alumno.last_name }}</td>
                               <td>{{ alumno.email}} </td>
                               <td>{{ alumno.correo_personal|default_if_none:"No registrado" }}</td>
                               <td>{{ alumno.matricula }} </td>
                               <td>{{ alumno.get_carrera_display }}</td>
-                              
                             </tr>
                             {% endfor %}
                           </tbody>
@@ -48,5 +53,31 @@
       </div>
   </div>
 </section>
+
+<!-- Script de JavaScript para la funcionalidad de seleccionar todos -->
+<script>
+  // Selecciona el checkbox de "Seleccionar todos" y todos los checkboxes individuales
+  const selectAllCheckbox = document.getElementById('select-all');
+  const itemCheckboxes = document.querySelectorAll('.select-item');
+
+  {% comment %} console.log(selectAllCheckbox);
+  console.log(itemCheckboxes); {% endcomment %}
+
+  // Añade un evento que, al cambiar el estado de 'select-all', cambie el estado de cada checkbox
+  selectAllCheckbox.addEventListener('change', function() {
+    itemCheckboxes.forEach(checkbox => {
+      checkbox.checked = selectAllCheckbox.checked;
+    });
+  });
+
+  // Actualiza el estado de 'select-all' si se desmarca uno de los checkboxes individuales
+  itemCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+      // Si todos los checkboxes individuales están marcados, el checkbox de "Seleccionar todos" también se marca
+      selectAllCheckbox.checked = [...itemCheckboxes].every(item => item.checked);
+    });
+  });
+</script>
+
 
 {% endblock %}

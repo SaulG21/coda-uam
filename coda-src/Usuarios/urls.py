@@ -30,4 +30,5 @@ urlpatterns = [
 
 
     # ... (other existing URL patterns)
+    path('saludo/', views.SaludoView.as_view(), name="saludo")
 ]
