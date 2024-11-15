@@ -40,6 +40,7 @@ urlpatterns = [
 
 
     path('ruta-pdf/', views.generar_pdf, name='generar_pdf'),
+    path('generar-carta-asginacion-alumno/', views.generar_carta_asignacion_alumno, name='generar_carta_alumno'),
     path('generar-txt/<int:pk>', views.generar_archivo_txt, name='generar_txt'),
     #path('debug-tutorias/', views.DebugTutoriasView.as_view(), name='debug-tutorias'),
     path('qr-code/', views.QRCodeView.as_view(), name='qr-code'),

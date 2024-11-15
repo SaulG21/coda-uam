@@ -21,7 +21,7 @@ from .forms import FormTutorias
 from .constants import PENDIENTE, ACEPTADO, RECHAZADO
 from Usuarios.constants import TUTOR, ALUMNO, COORDINADOR, TEMPLATES, CORREO
 from Usuarios.views import BaseAccessMixin, CodaViewMixin, TutorViewMixin, AlumnoViewMixin, CordinadorViewMixin
-from Usuarios.models import Tutor, Alumno, Cordinador
+from Usuarios.models import Tutor, Alumno, Cordinador, Coda
 from notifications.signals import notify
 from smtplib import SMTPException
 
@@ -142,6 +142,76 @@ def generar_pdf(request):
 
     # Devolver el PDF como una respuesta de archivo
     return FileResponse(buffer, as_attachment=True, filename='tabla.pdf')
+
+def generar_carta_asignacion_alumno(request):
+
+    # alumno_id = request.POST.post('alumno')
+    # if not alumno_id:
+    #     return HttpResponse("No seleccionaste ningún alumno.", status=400)
+
+    # nombre_alumno = request.GET.get('alumno')
+    nombre_alumno = "VÍCTOR SAÚL GARCÍA GODOY"
+    licenciatura = "INGENIERÍA EN COMPUTACIÓN"
+    profesor = "Dr Antonio López Jaimes"
+
+    buffer = BytesIO()
+
+    doc = SimpleDocTemplate(buffer, pagesize=letter)
+    elements = []
+
+    header_style = ParagraphStyle(name='HeaderStyle', fontSize=12, alignment=1)
+    header_text = 'Oficio No. DCNI-CODDAA_245_2024'
+    header_paragraph = Paragraph(header_text, header_style)
+    elements.append(header_paragraph);
+
+    date = "Ciudad de México a 16 de agosto del 2024"
+    date_style = ParagraphStyle(
+        name='MiEstilo',           # Nombre del estilo
+        fontName='Helvetica',      # Nombre de la fuente
+        fontSize=10,               # Tamaño de la fuente
+        leading=14,                # Espaciado entre líneas
+        alignment=2,               # Alineación: 0=Izquierda, 1=Centro, 2=Derecha, 3=Justificado
+        textColor='#333333',       # Color del texto en hexadecimal
+        spaceBefore=12,            # Espacio antes del párrafo
+        spaceAfter=12,             # Espacio después del párrafo
+        leftIndent=0,             # Sangría izquierda
+        rightIndent=0             # Sangría derecha
+    );
+
+    elements.append(Paragraph(date,date_style))
+    elements.append(Paragraph("Asunto: Reasignación de tutor", date_style));
+    style2 = ParagraphStyle(
+        name='MiEstilo',           # Nombre del estilo
+        fontName='Helvetica-bold',      # Nombre de la fuente
+        fontSize=11,               # Tamaño de la fuente
+        leading=14,                # Espaciado entre líneas
+        alignment=0,               # Alineación: 0=Izquierda, 1=Centro, 2=Derecha, 3=Justificado
+        textColor='#333333',       # Color del texto en hexadecimal
+        spaceBefore=12,            # Espacio antes del párrafo
+        spaceAfter=12,             # Espacio después del párrafo
+        leftIndent=0,             # Sangría izquierda
+        rightIndent=0,             # Sangría derecha
+        borderWidth=1
+    );
+    datos_alumno = Paragraph(f'C {nombre_alumno}', style2);
+    elements.append(datos_alumno);
+    elements.append(Paragraph('LICENCIATURA INGENIERÍA EN COMPUTACIÓN',style2));
+    elements.append(Paragraph('Presente',style2));
+
+    body = f"""
+    Por este medio le comunico que ha sido reasignada como su Tutor Académico al {profesor}. La tutoría es parte del del Sistema de Acompañamiento Estudiantil que desarrolla la Universidad Autónoma Metropolitana Unidad Cuajimalpa; así mismo, le informo que tiene que establecer contacto a la brevedad con su tutor a través del formato electrónico ubicado en la página de la CODDAA http://dcni.cua.uam.mx/coddaa/
+"""
+
+    body_style = ParagraphStyle(name="body_style", fontName='Helvetica', fontSize=12,leading=14, alignment=4, spaceBefore=12,spaceAfter=12);
+    elements.append(Paragraph(body, body_style));
+    elements.append(Paragraph("Sin otro particular, reciba un cordial saludo.", body_style));
+
+    # Construir el PDF
+    doc.build(elements)
+
+    buffer.seek(0)
+
+    return FileResponse(buffer, as_attachment=True, filename='CartaAsignacion.pdf')
 
 #Generar archivo txt de tutorias
 def generar_archivo_txt(request,pk):
