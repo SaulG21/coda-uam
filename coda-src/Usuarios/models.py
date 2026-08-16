@@ -5,7 +5,7 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.contrib.postgres.fields import ArrayField
 from .constants import ROLES, CARRERAS
 from Tutorias.constants import TEMAS, OTRO
-from .constants import CODA, TUTOR, COORDINADOR, ALUMNO, SEXOS, ESTADOS_ALUMNO
+from .constants import CODA, TUTOR, COORDINADOR, ALUMNO, SEXOS, ESTADOS_ALUMNO, COORDINACION_A_DEPARTAMENTO
 
 class UserManager(BaseUserManager):
     """Define a model manager for User model with no username field."""
@@ -64,6 +64,20 @@ class Usuario(AbstractUser):
 
     objects = UserManager()
 
+    @property
+    def nombre_completo(self):
+        """
+        Regresa el nombre completo del usuario omitiendo apellidos vacíos o nulos
+        para evitar mostrar 'None' en la interfaz.
+        """
+        
+        # Creamos una lista con las partes del nombre
+        partes = [self.first_name, self.last_name, self.second_last_name]
+        
+        # 1. filter(None, partes) elimina los valores vacíos o Nulos
+        # 2. " ".join(...) los une con un espacio
+        return " ".join(filter(None, partes))
+
     def __str__(self) -> str:
         return str(self.matricula)
     
@@ -74,7 +88,7 @@ class Usuario(AbstractUser):
         return role in self.rol  # Check if user has a specific role
 
 class Tutor(Usuario):
-    cubiculo = models.IntegerField()
+    cubiculo = models.CharField("Oficina", max_length=10, blank=True, null=True)
     horario = models.FileField(null=True, blank=True)
     coordinacion = models.CharField(max_length=30, choices=CARRERAS)
     es_coordinador = models.BooleanField(default=False)
@@ -90,8 +104,13 @@ class Tutor(Usuario):
             self.rol.append(TUTOR)
         super().save(*args, **kwargs)
 
+    @property
+    def departamento_adscripcion(self) -> str:
+        """Devuelve el nombre del departamento según la clave de coordinación."""
+        return COORDINACION_A_DEPARTAMENTO.get(self.coordinacion, "Sin Departamento")
+    
 class Coda(Usuario):
-    cubiculo = models.IntegerField()
+    cubiculo = models.CharField("Oficina", max_length=10, blank=True, null=True)
     horario = models.FileField(null=True, blank=True)
     es_coordinador = models.BooleanField(default=False)
     tema_tutorias = models.CharField(max_length=4, choices=TEMAS, default=OTRO)
@@ -106,7 +125,7 @@ class Coda(Usuario):
         super().save(*args, **kwargs)
 
 class Cordinador(Usuario):
-    cubiculo = models.IntegerField()
+    cubiculo = models.CharField("Oficina", max_length=10, blank=True, null=True)
     horario = models.FileField(null=True, blank=True)
     coordinacion = models.CharField(max_length=30, choices=CARRERAS)
     es_coordinador = models.BooleanField(default=True)

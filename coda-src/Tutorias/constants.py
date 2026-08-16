@@ -14,6 +14,8 @@ TITULACION = "TIT"
 EGRESO = "EGRE"
 PERSONALES = "PER"
 SEGUIMIENTO = "SR"
+LOCKER = "LKR"
+RECUPERACION = "REC"
 OTRO = "OTRO"
 
 TEMAS = [
@@ -22,29 +24,43 @@ TEMAS = [
     (INGLES, "Inglés"),
     (COLEGIADO, "Órgano colegiado"),
     (REGLAMENTOS, "Reglamentos"),
-    (SERVICIO, "Servicio Social"),
+    (SERVICIO, "Servicio social"),
     (MOVILIDAD, "Movilidad"),
-    (PROYECTO, "Proyecto Terminal"),
-    (ESTANCIA, "Estancia de Verano"),
-    (TRAYECTORIA, "Trayectoria Curricular"),
-    (GRUPO, "Eleccion de grupo"),
+    (PROYECTO, "Proyecto terminal"),
+    (ESTANCIA, "Estancia de verano"),
+    (TRAYECTORIA, "Trayectoria curricular"),
+    (GRUPO, "Elección de grupo"),
     (TITULACION, "Titulación"),
     (EGRESO, "Egreso"),
     (PERSONALES, "Personales"),
     (SEGUIMIENTO, "Seguimiento de reunión"),
+    (RECUPERACION, "Recuperación especial"),
+    (LOCKER, "Solicitud de locker"),
     (OTRO, "Otro")
 ]
 
+# Estados que sí se guardan en la base de datos
 ACEPTADO = 'ACE'
 RECHAZADO = 'REJ'
 PENDIENTE = 'PEN'
 CANCELADO = 'CAN'
+PROPUESTA = 'PRO'
+
+# Nuevos estados dinámicos (determinados en tiempo de ejecución)
+VENCIDA = 'VEN'
+REPORTADA = 'REP'
+REALIZADA = 'REA'
 
 ESTADO = [
     (ACEPTADO, 'Aceptada'),
     (RECHAZADO, 'Rechazada'),
     (PENDIENTE, 'Pendiente'),
-    (CANCELADO, 'Cancelada')
+    (CANCELADO, 'Cancelada'),
+    (PROPUESTA, 'Propuesta'),
+    # Estados determinados dinámicamente
+    (VENCIDA, 'Vencida'),
+    (REPORTADA, 'Registrada'),
+    (REALIZADA, 'Realizada'),    
 ]
 
 DURACION_ASESORIA = [
@@ -53,4 +69,30 @@ DURACION_ASESORIA = [
     (2, '1 hora'),
     (3, '2 horas'),
     (4, 'Más de dos horas')
+]
+
+TUTOR = "TUT"
+COORDINADOR = "COR"
+ALUMNO = "ALU"
+CODA = "CODA"
+
+MATEMATICAS = "MAT"
+COMPUTACION = "COM"
+IBIOLOGICA = "IB"
+BMOLECULAR = "BM"
+
+CARRERAS = [
+        ('', "Seleccione una"),
+        (MATEMATICAS, "Matemáticas Aplicadas"),
+        (COMPUTACION, "Ingeniería en Computación"),
+        (IBIOLOGICA, "Ingeniería Biológica"),
+        (BMOLECULAR, "Biología Molecular")
+]
+
+ROLES = [
+    ('', "Seleccione Rol"),
+    (TUTOR, "Tutor"),
+    (COORDINADOR, "Coordinador"),
+    (ALUMNO, "Alumno"),
+    (CODA, "CODDAA"),
 ]
